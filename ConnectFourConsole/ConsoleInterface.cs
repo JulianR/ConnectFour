@@ -31,7 +31,7 @@ namespace ConnectFourConsole
         "Nodes evaluated: " 
         + game.NodesEvaluated 
         + " out of " 
-        + Math.Pow(Constants.Columns, Constants.RecursionDepth)  
+        + Math.Pow(Constants.Columns, game.RecursionDepth)  
         + " leaf nodes."
       );
       Console.WriteLine();
@@ -54,7 +54,7 @@ namespace ConnectFourConsole
 
     private string ArrayToString<T>(T[] array)
     {
-      return "[" + string.Join(",", array) + "]";
+      return "[" + string.Join(",", array.Select(a => a.ToString()).ToArray()) + "]";
     }
   }
 }

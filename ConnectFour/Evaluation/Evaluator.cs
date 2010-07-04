@@ -18,6 +18,7 @@ namespace ConnectFour.Evaluation
 
       for (int i = 0; i < combinations.Length; i++)
       {
+        // This win-combination is only valuable if the opponent has no pieces in it
         if (opponentCombinations[i] == 0)
         {
           switch (combinations[i])
@@ -38,15 +39,15 @@ namespace ConnectFour.Evaluation
       return score;
     }
 
-    public static bool IsLeafNode(Game game, out Player winner)
+    public static bool IsLeafNode(GameBoard board, out Player winner)
     {
 
-      if (game.Board.InTerminalState(Player.AI))
+      if (board.InTerminalState(Player.AI))
       {
         winner = Player.AI;
         return true;
       }
-      else if (game.Board.InTerminalState(Player.Human))
+      else if (board.InTerminalState(Player.Human))
       {
         winner = Player.Human;
         return true;

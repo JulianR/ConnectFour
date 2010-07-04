@@ -6,7 +6,7 @@ using ConnectFourCore;
 
 namespace ConnectFour.Evaluation
 {
-  public class PlayerCombinations
+  public sealed class PlayerCombinations
   {
     private int[][] combinations;
 

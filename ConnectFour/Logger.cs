@@ -21,7 +21,7 @@ namespace ConnectFour
 
     public static void Clear()
     {
-      builder.Clear();
+      builder = new StringBuilder();
     }
 
     public static void Log(string s)

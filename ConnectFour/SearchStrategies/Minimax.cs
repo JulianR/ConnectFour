@@ -4,94 +4,74 @@ using System.Linq;
 using System.Text;
 using ConnectFourCore;
 using ConnectFour.Evaluation;
+using System.ComponentModel;
 
 namespace ConnectFour.SearchStrategies
 {
-  //public class Minimax : ISearchStrategy
-  //{
-  //  private int[] moves;
-  //  private Game game;
-  //  private GameBoard board;
-  //  private int bestColumn;
-  //  private int score;
+  public sealed class Minimax : ISearchStrategy
+  {
+    private int[] moves;
+    private Game game;
+    private GameBoard board;
+    private int bestColumn;
+    private int score;
 
-  //  public int FindBestColumnIndex(Game game)
-  //  {
-  //    this.game = game;
-  //    this.board = game.Board;
+    public int FindBestColumnIndex(Game game)
+    {
+      this.game = game;
+      this.board = game.Board;
 
-  //    moves = this.game.MoveGenerator.GetMovesForTurn(this.game);
+      this.NodesEvaluated = 0;
 
-  //    this.score = Max(Constants.RecursionDepth);
+      moves = this.game.MoveGenerator.GetMovesForTurn(this.game);
 
-  //    Console.WriteLine(score);
+      this.score = Negamax(0, Player.AI);
 
-  //    return this.bestColumn;
-  //  }
+      return this.bestColumn;
+    }
 
-  //  private int Max(int depth)
-  //  {
-  //    Player winner;
-  //    if (Evaluator.IsLeafNode(this.game, out winner) || depth == 0)
-  //    {
-  //      return Evaluator.Evaluate(this.game, depth);
-  //    }
+    public int NodesEvaluated { get; private set; }
 
-  //    int score = int.MinValue;
+    private int Negamax(int depth, Player player)
+    {
+      Player winner;
+      if (Evaluator.IsLeafNode(board, out winner))
+      {
+        // Give a lower score to wins further down the tree
+        return winner == player ? (10000 / depth) : (-10000 / depth);
+      }
+      else if (depth == game.RecursionDepth)
+      {
+        NodesEvaluated++;
+        return Evaluator.Evaluate(game, player);
+      }
 
-  //    foreach (var move in this.moves)
-  //    {
-  //      int row;
+      int score = -100000;
 
-  //      if (board.DoMove(move, Player.AI, out row))
-  //      {
+      foreach (var move in this.moves)
+      {
+        int row;
 
-  //        int value = Min(depth - 1);
+        if (board.DoMove(move, player, out row))
+        {
+          var value = -Negamax(depth + 1, (Player)1 - (int)player);
 
-  //        if (value > score)
-  //        {
-  //          score = value;
-  //          this.bestColumn = move;
-  //        }
+          board.UndoMove(move, row, player);
 
-  //        board.UndoMove(move, row, Player.AI);
-  //      }
-  //    }
+          if (value > score)
+          {
+            score = value;
+            if (player == Player.AI && depth == 0)
+            {
+              bestColumn = move;
+            }
+          }
+        }
+      }
 
-  //    return score;
+      return score;
 
-  //  }
+    }
 
-  //  private int Min(int depth)
-  //  {
-  //    Player winner;
-  //    if (Evaluator.IsLeafNode(this.game, out winner) || depth == 0)
-  //    {
-  //      return Evaluator.Evaluate(this.game, depth);
-  //    }
-
-  //    int score = int.MinValue;
-
-  //    foreach (var move in this.moves)
-  //    {
-  //      int row;
-
-  //      if (board.DoMove(move, Player.Human, out row))
-  //      {
-
-  //        int value = Max(depth - 1);
-
-  //        if (value > score)
-  //        {
-  //          score = value;
-  //        }
-
-  //        board.UndoMove(move, row, Player.Human);
-  //      }
-  //    }
-
-  //    return score;
-  //  }
-
-  //}
+  }
 }

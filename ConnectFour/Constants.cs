@@ -9,6 +9,5 @@ namespace ConnectFourCore
   {
     public const int Columns = 7;
     public const int Rows = 6;
-    public const int RecursionDepth = 7;
   }
 }

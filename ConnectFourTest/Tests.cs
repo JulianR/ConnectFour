@@ -47,7 +47,7 @@ namespace ConnectFourTest
       var game = new Game(board, Player.Human)
       {
         MoveGenerator = new LeftToRightMoveOrdering(),
-        SearchStrategy = new Negamax(),
+        SearchStrategy = new AlphaBeta(),
         Input = new MockGameInput()
       };
 
@@ -55,7 +55,7 @@ namespace ConnectFourTest
 
       Assert.IsTrue
       (
-        game.Board[3, Constants.Rows - 1] == Player.AI, 
+        game.Board[3, Constants.Rows - 1] == Player.AI,
         "AI had er voor moeten kiezen om de speler te blokkeren."
       );
 
@@ -63,34 +63,25 @@ namespace ConnectFourTest
 
     private void BlockTestVertical(int column)
     {
-      //Logger.Log("Unit Test for Column " + column);
-      var state = new Player[7,6];
-
-      for (int i = 0; i < 7; i++)
-      {
-        for (int j = 0; j < 6; j++)
-        {
-          state[i, j] = Player.None;
-        }
-      }
+      var state = new InitialBoardState();
 
       for (int i = 3; i < 6; i++)
-			{
+      {
         state[column, i] = Player.Human;
-			}
+      }
 
       var board = new GameBoard(state);
 
       var game = new Game(board, Player.Human)
       {
         MoveGenerator = new LeftToRightMoveOrdering(),
-        SearchStrategy = new Negamax(),
+        SearchStrategy = new AlphaBeta(),
         Input = new MockGameInput()
       };
 
       game.Start();
 
-      Assert.IsTrue(game.Board[column,2] == Player.AI, "AI had er voor moeten kiezen om de speler te blokkeren.");
+      Assert.IsTrue(game.Board[column, 2] == Player.AI, "AI had er voor moeten kiezen om de speler te blokkeren.");
 
     }
   }

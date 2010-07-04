@@ -10,10 +10,15 @@ namespace ConnectFourCore
   {
     public Player[] Cells { get; private set; }
 
+    // This array is used to store which row a game piece will fall in for a given column,
+    // an optimization so we don't have to search which row is free.
     private readonly int[] moves;
 
     public Game Game { get; set; }
 
+    // This array is used to store whether or not there is four-in-a-row somewhere
+    // This means we don't have to iterate over game state to find if there is,
+    // we just have to look in this array.
     private bool[] inTerminalState = new bool[2];
 
     public GameBoard()
@@ -36,19 +41,22 @@ namespace ConnectFourCore
     public GameBoard(Player[,] initialState)
       : this()
     {
-      for (int i = 0; i < initialState.GetLength(0); i++)
+      if (initialState != null)
       {
-        for (int j = 0; j < initialState.GetLength(1); j++)
+        for (int i = 0; i < initialState.GetLength(0); i++)
         {
-          if (initialState[i, j] != Player.None)
+          for (int j = 0; j < initialState.GetLength(1); j++)
           {
-            this[i, j] = initialState[i, j];
-
-            if (j <= moves[i])
+            if (initialState[i, j] != Player.None)
             {
-              moves[i] = j -1;
-            }
+              this[i, j] = initialState[i, j];
 
+              if (j <= moves[i])
+              {
+                moves[i] = j - 1;
+              }
+
+            }
           }
         }
       }
@@ -73,8 +81,10 @@ namespace ConnectFourCore
 
     public bool DoMove(int column, Player p, out int row)
     {
+      // Find the row the piece will drop in
       row = moves[column];
 
+      // If this isn't true, the column is full
       if (row >= 0)
       {
         Cells[column + row * Constants.Columns] = p;
@@ -83,10 +93,12 @@ namespace ConnectFourCore
 
         var combinations = this.Game.PlayerCombinations[p];
 
+        // Increment the player's win combinations for every cell
         foreach (int i in TerminalPositionsTable.Get(column,row))
         {
           combinations[i]++;
 
+          // Four in a row
           if (combinations[i] == 4)
           {
             inTerminalState[(int)p] = true;

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ConnectFourCore;
+using System.ComponentModel;
 
 namespace ConnectFour.SearchStrategies
 {
-  public class StaticMoveOrdering : IMoveOrderStrategy
+  public sealed class StaticMoveOrdering : IMoveOrderStrategy
   {
     #region IMoveOrderStrategy Members
 

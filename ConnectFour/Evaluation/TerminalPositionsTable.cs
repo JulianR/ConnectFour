@@ -11,7 +11,7 @@ namespace ConnectFour.Evaluation
 
     public static int[] Get(int column, int row)
     {
-        return table[column][row];
+      return table[column][row];
     }
 
     public static void Init()
@@ -22,7 +22,7 @@ namespace ConnectFour.Evaluation
         table[i] = new int[6][];
       }
 
-      #region "Winstmogelijkheden-tabel"
+      #region "Possible win-combinations"
       //c1r1
       table[0][0] = new int[3];
       table[0][0][0] = 21;

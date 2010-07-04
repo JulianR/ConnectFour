@@ -13,6 +13,7 @@ namespace ConnectFourCore
   {
     public Game(GameBoard board, Player currentPlayer)
     {
+      this.RecursionDepth = 7;
       this.Board = board;
       board.Game = this;
       TerminalPositionsTable.Init();
@@ -51,6 +52,10 @@ namespace ConnectFourCore
     private TimeSpan totalTimeTaken;
 
     public Player? Winner { get; private set; }
+
+    public int RecursionDepth { get; set; }
+
+    public int LastBestColumn { get; private set; }
 
     public int NodesEvaluated
     {
@@ -91,6 +96,7 @@ namespace ConnectFourCore
       TakeTurn(this.CurrentPlayer);
     }
 
+    // Signal to listeners that the game changed state and probably needs a rerender
     private void Invalidate()
     {
       if (this.Invalidated != null)
@@ -147,23 +153,20 @@ namespace ConnectFourCore
       sw.Stop();
       TimeTaken = sw.Elapsed;
       totalTimeTaken += sw.Elapsed;
+      this.LastBestColumn = column;
 
       Drop(column);
       this.moveCount++;
-
-      //Logger.Flush();
-      //Logger.Clear();
-
     }
 
     private int Drop(int column)
     {
       int row;
       Board.DoMove(column, this.CurrentPlayer, out row);
-     
+
       Player winner;
 
-      if (Evaluator.IsLeafNode(this, out winner))
+      if (Evaluator.IsLeafNode(this.Board, out winner))
       {
         this.gameIsOver = true;
         this.Winner = winner;

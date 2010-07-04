@@ -11,7 +11,7 @@ namespace ConnectFour.SearchStrategies
   {
     #region IMoveOrderStrategy Members
 
-    private const int scoreWeight = 10;
+    private const int scoreWeight = 100;
 
     public int[] GetMovesForTurn(Game game)
     {

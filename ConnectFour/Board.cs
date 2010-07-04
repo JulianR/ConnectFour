@@ -14,8 +14,11 @@ namespace ConnectFourCore
 
     public Game Game { get; set; }
 
+    private bool[] inTerminalState = new bool[2];
+
     public GameBoard()
     {
+
       Cells = new Player[Constants.Columns * Constants.Rows];
 
       for (int i = 0; i < Cells.Length; i++)
@@ -63,6 +66,11 @@ namespace ConnectFourCore
       }
     }
 
+    public bool InTerminalState(Player player)
+    {
+      return inTerminalState[(int)player];
+    }
+
     public bool DoMove(int column, Player p, out int row)
     {
       row = moves[column];
@@ -78,6 +86,11 @@ namespace ConnectFourCore
         foreach (int i in TerminalPositionsTable.Get(column,row))
         {
           combinations[i]++;
+
+          if (combinations[i] == 4)
+          {
+            inTerminalState[(int)p] = true;
+          }
         }
 
         return true;
@@ -93,6 +106,10 @@ namespace ConnectFourCore
       var combinations = this.Game.PlayerCombinations[player];
       foreach (int i in TerminalPositionsTable.Get(column,row))
       {
+        if (combinations[i] == 4)
+        {
+          inTerminalState[(int)player] = false;
+        }
         combinations[i]--;
       }
       Cells[column + row * Constants.Columns] = Player.None;

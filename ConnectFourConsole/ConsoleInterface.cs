@@ -8,11 +8,6 @@ namespace ConnectFourConsole
 {
   public class ConsoleInterface : IGameRenderer
   {
-    private Game game;
-    public ConsoleInterface()
-    {
-
-    }
 
     public void Draw(Game game)
     {
@@ -27,27 +22,39 @@ namespace ConnectFourConsole
           Console.Write("  ");
       }
       Console.WriteLine();
-      for (int y = 0; y < Constants.Rows; y++)
+      Console.Write(game.Board.ToString());
+      Console.WriteLine();
+      Console.WriteLine("Time taken: " + game.TimeTaken.TotalMilliseconds + " ms");
+      Console.WriteLine();
+      Console.WriteLine
+      (
+        "Nodes evaluated: " 
+        + game.NodesEvaluated 
+        + " out of " 
+        + Math.Pow(Constants.Columns, Constants.RecursionDepth)  
+        + " leaf nodes."
+      );
+      Console.WriteLine();
+      Console.WriteLine("Move ordering: " + ArrayToString(game.MoveGenerator.GetMovesForTurn(game)));
+
+
+      if (game.Winner.HasValue)
       {
-        for (int x = 0; x < Constants.Columns; x++)
-        {
-          Player player = game.Board[x, y];
-          if (player == Player.Human)
-          {
-            Console.Write("|0");
-          }
-          else if (player == Player.AI)
-          {
-            Console.Write("|X");
-          }
-          else
-          {
-            Console.Write("|_");
-          }
-        }
-        Console.Write("|");
         Console.WriteLine();
+        Console.WriteLine("Game was won by player " + game.Winner.Value);
       }
+      if (game.AverageTimeTaken.HasValue)
+      {
+        Console.WriteLine();
+        Console.WriteLine("Average time taken / move: " + game.AverageTimeTaken.Value.TotalMilliseconds + " ms");
+      }
+      Console.WriteLine();
+
+    }
+
+    private string ArrayToString<T>(T[] array)
+    {
+      return "[" + string.Join(",", array) + "]";
     }
   }
 }

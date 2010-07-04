@@ -5,6 +5,7 @@ using System.Text;
 using ConnectFour;
 using ConnectFour.Evaluation;
 using ConnectFour.SearchStrategies;
+using System.Diagnostics;
 
 namespace ConnectFourCore
 {
@@ -43,6 +44,27 @@ namespace ConnectFourCore
     public event Action<Game> Invalidated;
 
     public PlayerCombinations PlayerCombinations { get; private set; }
+
+    public TimeSpan TimeTaken { get; private set; }
+    public TimeSpan? AverageTimeTaken { get; private set; }
+
+    private TimeSpan totalTimeTaken;
+
+    public Player? Winner { get; private set; }
+
+    public int NodesEvaluated
+    {
+      get
+      {
+        if (this.SearchStrategy != null)
+        {
+          return this.SearchStrategy.NodesEvaluated;
+        }
+        return 0;
+      }
+    }
+
+    private int moveCount = 0;
 
     private bool gameIsOver;
 
@@ -91,11 +113,11 @@ namespace ConnectFourCore
             switch (command)
             {
               case InputCommand.MoveLeft:
-                Math.Max(0, --SelectedColumnIndex);
+                SelectedColumnIndex = Math.Max(0, --SelectedColumnIndex);
                 Invalidate();
                 break;
               case InputCommand.MoveRight:
-                Math.Min(Constants.Columns, ++SelectedColumnIndex);
+                SelectedColumnIndex = Math.Min(Constants.Columns - 1, ++SelectedColumnIndex);
                 Invalidate();
                 break;
               case InputCommand.Drop:
@@ -120,12 +142,17 @@ namespace ConnectFourCore
 
     private void MakeDecision()
     {
+      Stopwatch sw = Stopwatch.StartNew();
       var column = this.SearchStrategy.FindBestColumnIndex(this);
+      sw.Stop();
+      TimeTaken = sw.Elapsed;
+      totalTimeTaken += sw.Elapsed;
 
       Drop(column);
+      this.moveCount++;
 
-      Logger.Flush();
-      Logger.Clear();
+      //Logger.Flush();
+      //Logger.Clear();
 
     }
 
@@ -133,18 +160,17 @@ namespace ConnectFourCore
     {
       int row;
       Board.DoMove(column, this.CurrentPlayer, out row);
-      this.Invalidate();
-
+     
       Player winner;
 
       if (Evaluator.IsLeafNode(this, out winner))
       {
         this.gameIsOver = true;
-        //Console.WriteLine();
-        //Console.WriteLine(winner.ToString() + " WINS!");
-        //Console.WriteLine("Average time / computer turn: " + new TimeSpan(this.averageTime.Ticks / this.nrOfMoves));
-        //Console.WriteLine();
+        this.Winner = winner;
+        this.AverageTimeTaken = new TimeSpan(totalTimeTaken.Ticks / moveCount);
       }
+
+      this.Invalidate();
 
       return row;
     }

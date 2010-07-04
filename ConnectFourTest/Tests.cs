@@ -63,7 +63,7 @@ namespace ConnectFourTest
 
     private void BlockTestVertical(int column)
     {
-      Logger.Log("Unit Test for Column " + column);
+      //Logger.Log("Unit Test for Column " + column);
       var state = new Player[7,6];
 
       for (int i = 0; i < 7; i++)

@@ -16,42 +16,13 @@ namespace ConnectFourConsole
       game.Start();
     }
 
-    private static GameBoard Test()
-    {
-      var state = new Player[7, 6];
-
-      for (int i = 0; i < 7; i++)
-      {
-        for (int j = 0; j < 6; j++)
-        {
-          state[i, j] = Player.None;
-        }
-      }
-
-      for (int i = 0; i < 3; i++)
-      {
-        state[i, 5] = Player.AI;
-      }
-
-      var board = new GameBoard(state);
-
-      var game = new Game(board, Player.AI);
-
-      var generator = new DynamicMoveOrdering();
-
-      generator.GetMovesForTurn(game);
-
-      return board;
-    }
-
     public static Game CreateConsoleGame()
     {
       var game = new Game(Player.Human)
       {
         Input = new ConsoleInput(),
-        //SearchStrategy = new Minimax(),
         SearchStrategy = new Negamax(),
-        MoveGenerator = new LeftToRightMoveOrdering()
+        MoveGenerator = new DynamicMoveOrdering()
       };
 
       var renderer = new ConsoleInterface();

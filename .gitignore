@@ -1,0 +1,9 @@
+*.dll
+*.pdb
+*.exe
+*.cache
+*.trx
+*.manifest
+*/bin/
+*/obj/
+TestResults/*

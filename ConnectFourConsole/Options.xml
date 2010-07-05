@@ -12,7 +12,7 @@
   <!-- Options: TestPositionOne, TestPositionTwo, None -->
   <InitialState>None</InitialState>
 
-  <!-- Options: True, False-->
+  <!-- Options: true, false-->
   <IsComputerVsComputer>false</IsComputerVsComputer>
   
 </Options>

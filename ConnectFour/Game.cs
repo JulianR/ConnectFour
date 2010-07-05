@@ -144,6 +144,7 @@ namespace ConnectFourCore
           SwitchTurns();
         }
       }
+      Console.ReadLine();
     }
 
     private void MakeDecision()
@@ -174,6 +175,8 @@ namespace ConnectFourCore
       }
 
       this.Invalidate();
+
+      
 
       return row;
     }

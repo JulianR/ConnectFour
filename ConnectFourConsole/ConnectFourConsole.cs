@@ -78,7 +78,8 @@ namespace ConnectFourConsole
           SearchStrategy = searchInstance,
           MoveGenerator = moveInstance,
           Input = new ConsoleInput(),
-          RecursionDepth = options.RecursionDepth
+          RecursionDepth = options.RecursionDepth,
+          IsComputerVsComputer = options.IsComputerVsComputer
         };
 
         var renderer = new ConsoleInterface();

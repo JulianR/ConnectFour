@@ -8,7 +8,7 @@ namespace ConnectFour.SearchStrategies
 {
   public interface ISearchStrategy
   {
-    int FindBestColumnIndex(Game game);
+    int FindBestColumnIndex(Game game, Player player);
 
     int NodesEvaluated { get; }
   }

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Options>
+
+  <RecursionDepth>8</RecursionDepth>
+  
+  <!-- Options: AlphaBeta, Minimax -->
+  <SearchStrategy>AlphaBeta</SearchStrategy>
+  
+  <!-- Options: DynamicMoveOrdering, StaticMoveOrdering, LeftToRightMoveOrdering -->
+  <MoveOrderingStrategy>DynamicMoveOrdering</MoveOrderingStrategy>
+  
+  <!-- Options: TestPositionOne, TestPositionTwo, None -->
+  <InitialState>None</InitialState>
+
+  <!-- Options: True, False-->
+  <IsComputerVsComputer>false</IsComputerVsComputer>
+  
+</Options>

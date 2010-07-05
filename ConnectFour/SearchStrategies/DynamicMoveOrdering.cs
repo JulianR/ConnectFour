@@ -23,7 +23,7 @@ namespace ConnectFour.SearchStrategies
                                           where game.Board[c, r] == Player.None
                                           select TerminalPositionsTable.Get(c, r).Count()).Sum()
 
-              let combinationsForPlayer = game.PlayerCombinations[Player.AI]
+              let combinationsForPlayer = game.PlayerCombinations[game.CurrentPlayer]
 
               let scoreInColumn = (from r in Enumerable.Range(0, Constants.Rows)
                                    from x in TerminalPositionsTable.Get(c, r)

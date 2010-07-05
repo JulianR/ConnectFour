@@ -18,17 +18,19 @@ namespace ConnectFour.SearchStrategies
     private GameBoard board;
     private int bestColumn;
     private int score;
+    private Player maxPlayer;
 
-    public int FindBestColumnIndex(Game game)
+    public int FindBestColumnIndex(Game game, Player maxPlayer)
     {
       this.game = game;
       this.board = game.Board;
+      this.maxPlayer = maxPlayer;
 
       NodesEvaluated = 0;
 
       moves = this.game.MoveGenerator.GetMovesForTurn(this.game);
 
-      this.score = Negamax(0, -100000, 100000, Player.AI);
+      this.score = Negamax(0, -100000, 100000, maxPlayer);
 
       return this.bestColumn;
     }
@@ -62,7 +64,7 @@ namespace ConnectFour.SearchStrategies
           if (value > alpha)
           {
             alpha = value;
-            if (player == Player.AI && depth == 0)
+            if (player == maxPlayer && depth == 0)
             {
               bestColumn = move;
             }
@@ -70,7 +72,7 @@ namespace ConnectFour.SearchStrategies
 
           if (alpha >= beta)
           {
-            return alpha;
+            return alpha; // Cut-off
           }
 
         }

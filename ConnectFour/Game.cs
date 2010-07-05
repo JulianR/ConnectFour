@@ -6,6 +6,7 @@ using ConnectFour;
 using ConnectFour.Evaluation;
 using ConnectFour.SearchStrategies;
 using System.Diagnostics;
+using System.Threading;
 
 namespace ConnectFourCore
 {
@@ -42,6 +43,8 @@ namespace ConnectFourCore
 
     public ISearchStrategy SearchStrategy { get; set; }
 
+    public bool IsComputerVsComputer { get; set; }
+
     public event Action<Game> Invalidated;
 
     public PlayerCombinations PlayerCombinations { get; private set; }
@@ -56,6 +59,8 @@ namespace ConnectFourCore
     public int RecursionDepth { get; set; }
 
     public int LastBestColumn { get; private set; }
+
+
 
     public int NodesEvaluated
     {
@@ -109,7 +114,7 @@ namespace ConnectFourCore
     {
       if (!this.gameIsOver)
       {
-        if (CurrentPlayer == Player.Human)
+        if (CurrentPlayer == Player.Human && !IsComputerVsComputer)
         {
           InputCommand command;
 
@@ -138,19 +143,29 @@ namespace ConnectFourCore
 
           SwitchTurns();
         }
+        else if (CurrentPlayer == Player.Human)
+        {
+          MakeDecision(Player.Human);
+          Thread.Sleep(500);
+          SwitchTurns();
+        }
         else
         {
-          MakeDecision();
+          MakeDecision(Player.AI);
+          if (IsComputerVsComputer)
+          {
+            Thread.Sleep(500);
+          }
           SwitchTurns();
         }
       }
       Console.ReadLine();
     }
 
-    private void MakeDecision()
+    private void MakeDecision(Player maxPlayer)
     {
       Stopwatch sw = Stopwatch.StartNew();
-      var column = this.SearchStrategy.FindBestColumnIndex(this);
+      var column = this.SearchStrategy.FindBestColumnIndex(this, maxPlayer);
       sw.Stop();
       TimeTaken = sw.Elapsed;
       totalTimeTaken += sw.Elapsed;
